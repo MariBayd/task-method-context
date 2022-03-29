@@ -1,3 +1,5 @@
+import { count } from 'console';
+import { findConfigFile } from 'typescript';
 import { EventEmitter } from './EventEmitter';
 
 /*
@@ -8,8 +10,15 @@ import { EventEmitter } from './EventEmitter';
  */
 export const obj = {
     count: 0,
-    subscribe() {},
-    unsubscribe() {},
+    myCallback() {
+        obj.count++;
+    },
+    subscribe() {
+        EventEmitter.on('click', this.myCallback);
+    },
+    unsubscribe() {
+        EventEmitter.off('click', this.myCallback);
+    },
 };
 
 /*
@@ -19,7 +28,10 @@ obj1.first(1, 2, 3);
 // Внутренний вызов должен быть равносилен obj1.second(3, 2, 1)
  */
 export const obj1 = {
-    first(...args) {},
+    first(...args) {
+        const reversedArgs = args.reverse();
+        this.second(...reversedArgs);
+    },
     second() {
         // здесь ничего писать не нужно
     },
